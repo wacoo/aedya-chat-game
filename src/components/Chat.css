@@ -1,0 +1,21 @@
+.incoming,
+.outgoing {
+    width: 60%;
+    margin: 24px;
+}
+
+.incoming {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: green solid 2px;
+}
+
+.outgoing {
+    margin-left: 38%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    outline: red solid 2px;
+
+}

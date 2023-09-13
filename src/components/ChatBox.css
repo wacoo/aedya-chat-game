@@ -1,0 +1,25 @@
+.box {
+    height: 90vh;
+    padding: 12px 24px 12px 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    outline: red solid 2px;
+}
+
+.input-box {
+    outline: red solid 2px;
+}
+.input-box input {
+    width: calc(100% - 150px);
+    height: 35px;
+    margin: 12px 5px 12px 12px;
+    padding: 0 10px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.input-box button {
+    width: 85px;
+    height: 37px;
+}
