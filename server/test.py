@@ -1,21 +1,38 @@
 from models.base import session, engine, Base
 from models.users import User
-from models.credentials import Credential
-from models.notes import Note
+from models.chats import Chats
+from models.games import Games
 
 # create a new user
-'''user = User(fname='John', lname='Doe', email='johndoe@example.com', password='123')
+'''
+
+'''
+
+#Working....
+'''user = User(email='johndoe@example.com', fname='John', lname='Doe', country='Ethiopia', score=0, password='123')
 session.add(user)
-session.commit()
+#session.commit()
 
-user2 = User(fname='Wondmagegn', lname='Chosha', email='wabaham9@gmail.com', password='123')
+user2 = User(email='wabaham9@gmail.com', fname='Wondmagegn', lname='Chosha', country='Kenya', score=0, password='123')
 session.add(user2)
-session.commit()
+#session.commit()
 
-user3 = User(fname='Bishaw', lname='Abraham', email='aboanarges@gmail.com', password='321')
+user3 = User(email='albert@gmail.com', fname='Albert', lname='David', country='Nigeria', score=0, password='123')
 session.add(user3)
 session.commit()
+user4 = User(email='solomon@gmail.com', fname='Solomon', lname='Kane', country='South Africa', score=0, password='123')
+session.add(user4)'''
+#session.commit()
 
+
+#Chat
+chat1 = Chats(chat='Hi albert, how is the day going? I am having some problem with the project. Can you help?', sent_from='wabaham9@gmail.com', sent_to='albert@gmail.com')
+session.add(chat1)
+session.commit()
+chat2 = Chats(chat='Sorry man, I am in bit fo trouble. I can not.', sent_from='albert@gmail.com', sent_to='wabaham9@gmail.com')
+session.add(chat2)
+session.commit()
+'''
 u1 = session.query(User).filter_by(email='wabaham9@gmail.com').all()
 u2 = session.query(User).filter_by(email='aboanarges@gmail.com').all()'''
 
@@ -23,10 +40,11 @@ u2 = session.query(User).filter_by(email='aboanarges@gmail.com').all()'''
     us.delete()
 for us in u2:
     us.delete() 
-session.commit()'''
+session.commit()
+'''
 
 # create a new credential for the user
-credential = Credential(url='https://facebook.com', username='wac', password='wac123', name='Facebook', user_email='wabaham9@gmail.com', auto_fill=False)
+'''credential = Credential(url='https://facebook.com', username='wac', password='wac123', name='Facebook', user_email='wabaham9@gmail.com', auto_fill=False)
 session.add(credential)
 session.commit()
 
@@ -57,7 +75,7 @@ session.commit()
 
 '''
 # update the user's password
-user.password = 'newpassword456'
+'''user.password = 'newpassword456'
 session.commit()
 '''
 '''# delete the credential

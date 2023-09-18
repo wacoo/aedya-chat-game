@@ -1,4 +1,4 @@
 use aedya_db;
-drop table credentials;
-drop table notes;
+drop table chats;
+drop table games;
 drop table users;

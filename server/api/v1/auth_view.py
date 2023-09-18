@@ -46,9 +46,11 @@ def login():
 def register():
     # Get the user data from the request
     data = request.json
+    email = data.get('email')
     fname = data.get('fname')
     lname = data.get('lname')
-    email = data.get('email')
+    country = data.get('country')
+    score = data.get('score')
     password = data.get('passwd')
 
     # Validate input
@@ -56,6 +58,10 @@ def register():
         return jsonify({"message": "First name is required"}), 400
     if not lname:
         return jsonify({"message": "Last name is required"}), 400
+    if not country:
+        return jsonify({"message": "Country is required"}), 400
+    if not score:
+        return jsonify({"message": "Score is required"}), 400
     if not email:
         return jsonify({"message": "Email is required"}), 400
     if not password:
@@ -67,7 +73,7 @@ def register():
     #hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt.encode('utf-8'))
 
     # Create a new User object and add it to the database
-    user = User(fname=fname, lname=lname, email=email, password=hashed_password)
+    user = User(email=email, fname=fname, lname=lname, country=country, score=score, password=hashed_password)
     session.add(user)
     session.commit()
 

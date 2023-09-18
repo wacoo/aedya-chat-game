@@ -1,19 +1,23 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
-from models.base import Base, engine
+from models.base import Base
 import datetime
+
 
 class Chats(Base):
     __tablename__ = 'chats'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     chat = Column(String(1000))
+    sent_from = Column(String(50), ForeignKey('users.email'))
     sent_to = Column(String(50), ForeignKey('users.email'))
-    user = relationship('User', back_populates='chats')
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
 
-    def __init__(self, chat, user_email):
+    user_sent_from = relationship('User', back_populates='chats_sent', foreign_keys=[sent_from])
+    user_sent_to = relationship('User', back_populates='chats_received', foreign_keys=[sent_to])
+
+    def __init__(self, chat, sent_from, sent_to):
         self.chat = chat
-        self.user_email = user_email
-        self.created_at = datetime.datetime.now()
-        self.updated_at = datetime.datetime.now()
-Base.metadata.create_all(engine)
+        self.sent_from = sent_from
+        self.sent_to = sent_to
