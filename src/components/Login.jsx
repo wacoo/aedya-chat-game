@@ -1,20 +1,47 @@
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from 'react-router-dom';
+import { authenticateUser } from "../redux/user/userSlice";
+import NavBar from "./NavBar";
 
 const Login = () => {
+    const token = useSelector((state) => state.user.token);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const localToken = localStorage.getItem('token');
+
+    useEffect(() => {
+        if(localToken) {
+            console.log(localToken)
+            navigate('/');
+        }
+    }, [localToken])
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const credential = { email, password };
+        dispatch(authenticateUser(credential));
+    }
 
     return (
-        <div className="container">
-            <div className="reg-wrapper">
-                <form action="" method="post">
-                    <input type="email" id="email" name="email" placeholder="Email"/>
-                    <br />
-                    <br />
-                    <input type="password" id="passwd" name="passwd" placeholder="Password"/>
-                    <br />
-                    <br />
-                    <button type="submit">Login</button>
-                </form>
+        <>
+            <NavBar />
+            <div className="container">
+                <div className="reg-wrapper">
+                    <form action="" method="post" onSubmit={(e) => {handleSubmit(e)}}>
+                        <input type="email" id="email" onChange={(e) => setEmail(e.target.value)} placeholder="Email"/>
+                        <br />
+                        <br />
+                        <input type="password" id="passwd" onChange={((e) => setPassword(e.target.value))} placeholder="Password"/>
+                        <br />
+                        <br />
+                        <button type="submit">Login</button>
+                    </form>
+                </div>
             </div>
-        </div>
+        </>
     );
 }
 

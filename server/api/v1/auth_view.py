@@ -3,6 +3,7 @@ from flask import request, jsonify, Blueprint, current_app
 from models.users import User
 from models.base import session
 from auth.auth import TokenAuth
+from sqlalchemy.exc import SQLAlchemyError
 
 auth_view = Blueprint('auth_view', __name__)
 
@@ -11,9 +12,10 @@ auth_view = Blueprint('auth_view', __name__)
 @auth_view.route("/login", methods=["POST"])
 def login():
     # Get the username and password from the request
-    email = 'wabaham9@gmail.com'#request.json.get("email")
-    password = request.json.get("passwd")
+    email = request.json.get("email")
+    password = request.json.get("password")
 
+    print(email, password)
     # Validate input
     if not email:
         print('1111')
@@ -45,40 +47,56 @@ def login():
 @auth_view.route('/register', methods=['POST'])
 def register():
     # Get the user data from the request
-    data = request.json
-    email = data.get('email')
-    fname = data.get('fname')
-    lname = data.get('lname')
-    country = data.get('country')
-    score = data.get('score')
-    password = data.get('passwd')
+    try:
+        data = request.json
+        email = data.get('email')
+        fname = data.get('fname')
+        lname = data.get('lname')
+        country = data.get('country')
+        score = data.get('score')
+        password = data.get('password')
 
-    # Validate input
-    if not fname:
-        return jsonify({"message": "First name is required"}), 400
-    if not lname:
-        return jsonify({"message": "Last name is required"}), 400
-    if not country:
-        return jsonify({"message": "Country is required"}), 400
-    if not score:
-        return jsonify({"message": "Score is required"}), 400
-    if not email:
-        return jsonify({"message": "Email is required"}), 400
-    if not password:
-        return jsonify({"message": "Password is required"}), 400
+        # Validate input
+        if not fname:
+            print(11)
+            return jsonify({"message": "First name is required"}), 400
+        if not lname:
+            print(22)
+            return jsonify({"message": "Last name is required"}), 400
+        # if not country:
+        #     print(33)
+        #     return jsonify({"message": "Country is required"}), 400
+        # if not score:
+        #     print(44)
+        #     return jsonify({"message": "Score is required"}), 400
+        if not email:
+            print(55)
+            return jsonify({"message": "Email is required"}), 400
+        if not password:
+            print(66)
+            return jsonify({"message": "Password is required"}), 400
 
-    # Hash the password using bcrypt
-    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-    #salt = bcrypt.gensalt()
-    #hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt.encode('utf-8'))
+        # Hash the password using bcrypt
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        #salt = bcrypt.gensalt()
+        #hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt.encode('utf-8'))
 
-    # Create a new User object and add it to the database
-    user = User(email=email, fname=fname, lname=lname, country=country, score=score, password=hashed_password)
-    session.add(user)
-    session.commit()
+        # Create a new User object and add it to the database
+        user = User(email=email, fname=fname, lname=lname, country=country, score=score, password=hashed_password)
+        session.add(user)
+        session.commit()
 
-    # Return a success message to the client
-    return jsonify({'message': 'User created successfully!'})
+        # Return a success message to the client
+        return jsonify({'message': 'User created successfully!'})
+    except SQLAlchemyError as e:
+        session.rollback();
+        print(e);
+        return jsonify({'error': 'Database error'})
+    except Exception as e:
+        session.rollback();
+        print(e);
+        return jsonify({'error': 'Submission error'})
+
 
 # Handle errors
 @auth_view.errorhandler(400)

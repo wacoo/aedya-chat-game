@@ -18,7 +18,7 @@ class User(Base):
     chats_sent = relationship('Chats', back_populates='user_sent_from', foreign_keys='Chats.sent_from')
     chats_received = relationship('Chats', back_populates='user_sent_to', foreign_keys='Chats.sent_to')
 
-    def __init__(self, fname, lname, country, score, email, password):
+    def __init__(self, fname, lname, email, password, country='', score=0):
         self.fname = fname
         self.lname = lname
         self.country = country

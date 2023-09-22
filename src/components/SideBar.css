@@ -1,8 +1,10 @@
 .side-bar {
+    position: fixed;
+    top: 80px;
+    left: 0;
+    height: 100vh;
     width: 200px;
-    height: 90vh;
     background-color: lightblue;
-    margin: 12px 0;
-    border: gray solid 4px;
-    border-radius: 5px;
+    border: gray solid 2px;
+    border-radius: 8px;
 }
