@@ -10,7 +10,7 @@ class User(Base):
     fname = Column(String(50))
     lname = Column(String(50))
     country = Column(String(50))
-    score = Column(Integer)
+    total_score = Column(Integer)
     password = Column(String(200))
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
@@ -18,11 +18,11 @@ class User(Base):
     chats_sent = relationship('Chats', back_populates='user_sent_from', foreign_keys='Chats.sent_from')
     chats_received = relationship('Chats', back_populates='user_sent_to', foreign_keys='Chats.sent_to')
 
-    def __init__(self, fname, lname, email, password, country='', score=0):
+    def __init__(self, fname, lname, email, password, country='', total_score=0):
         self.fname = fname
         self.lname = lname
         self.country = country
-        self.score = score
+        self.total_score = total_score
         self.email = email
         self.password = password
 

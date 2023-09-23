@@ -53,7 +53,7 @@ def register():
         fname = data.get('fname')
         lname = data.get('lname')
         country = data.get('country')
-        score = data.get('score')
+        score = 0
         password = data.get('password')
 
         # Validate input
@@ -82,7 +82,7 @@ def register():
         #hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt.encode('utf-8'))
 
         # Create a new User object and add it to the database
-        user = User(email=email, fname=fname, lname=lname, country=country, score=score, password=hashed_password)
+        user = User(email=email, fname=fname, lname=lname, country=country, total_score=score, password=hashed_password)
         session.add(user)
         session.commit()
 

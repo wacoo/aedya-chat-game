@@ -5,6 +5,7 @@ from models.chats import Chats
 from models.games import Games
 from auth.auth import TokenAuth
 from sqlalchemy import or_
+import random
 
 view = Blueprint('view', __name__)
 auth = TokenAuth()
@@ -49,3 +50,21 @@ def send_chat():
       return jsonify({'message': 'Sent'})
    except Exception as e:
       return jsonify({'error': 'Error: Message not sent'})
+   
+@view.route('/newgame', methods=['POST'])
+#@auth.requires_token
+def new_game():
+   ''' create a new game '''
+   try:
+      player1_email = request.json.get("player1")
+      country = request.json.get("country")
+      all_users = session.query(User.email).filter(User.country == country).all()
+      player2_email = random.choice(all_users)[0]
+      msg = request.json.get("msg"),
+      game1 = Games(name= 'AEDYA', description='At the end of the day you are alone.', player1=player1_email, player2=player2_email, winner='')
+      session.add(game1)
+      session.commit()
+
+      return jsonify({'message': 'Game created', 'game_id': game1.id, 'opponent': player2_email})
+   except Exception as e:
+      return jsonify({'error': 'Error: Game not created'})
