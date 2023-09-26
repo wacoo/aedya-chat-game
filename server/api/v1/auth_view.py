@@ -18,10 +18,8 @@ def login():
     print(email, password)
     # Validate input
     if not email:
-        print('1111')
         return jsonify({"message": "Email is required"}), 400
     if not password:
-        print('2222')
         return jsonify({"message": "Password is required"}), 400
 
     # Create a TokenAuth instance for this request context
@@ -39,7 +37,7 @@ def login():
         token = auth.generate_token(user.email)
 
         # Return the token to the client
-        return jsonify({"token": token, 'email': user.email}), 200
+        return jsonify({"token": token, 'email': user.email, 'country': user.country}), 200
     else:
         return jsonify({"message": "Invalid username or password"}), 401
 
