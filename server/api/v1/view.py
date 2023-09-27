@@ -4,7 +4,7 @@ from models.users import User
 from models.chats import Chats
 from models.games import Games
 from auth.auth import TokenAuth
-from sqlalchemy import or_
+from sqlalchemy import or_, and_
 import random
 
 view = Blueprint('view', __name__)
@@ -15,18 +15,18 @@ auth = TokenAuth()
 def home():
    ''' home page '''
    try:
-      email = request.args.get("email")
-      print('DDDD', email)
+      email1 = request.args.get("email1")
+      email2 = request.args.get("email2")
       #games = session.query(Games).all()
-      chats = session.query(Chats).filter(or_(Chats.sent_from == email, Chats.sent_to == email)).all()
+      chats = session.query(Chats).filter(or_(and_(Chats.sent_from == email1, Chats.sent_to == email2), and_(Chats.sent_from == email2, Chats.sent_to == email1))).all()
       #user_data['chatentials'] = chats
       #user_data['games'] = games
       chat_lst = []
       for chat in chats:
          chat_dict = {}
-         if chat.sent_from == email:
+         if chat.sent_from == email1 and chat.sent_to == email2:
             chat_dict['direction'] = 'outgoing'
-         elif chat.sent_to == email:
+         elif chat.sent_from == email2 and chat.sent_to == email1:
             chat_dict['direction'] = 'incoming'
          chat_dict['msg'] = chat.__dict__['chat']
          chat_dict['created_at'] = str(chat.__dict__['created_at'])
@@ -37,7 +37,6 @@ def home():
       return jsonify({'status': 200, 'chats': chat_lst})
    except Exception as e:
       session.rollback()
-      print('XXX', e)
       return jsonify({"error": 'e'})
 
 @view.route('/send', methods=['POST'])
@@ -68,6 +67,7 @@ def new_game():
       all_users = session.query(User.email).filter(User.country == country).all()
       player2_email = random.choice(all_users)[0]
 
+      print('P1', player1_email)
       all_users = session.query(User.email).filter(User.country == country).all()
       all_emails = [user[0] for user in all_users if user[0] != player1_email]
       player2_email = random.choice(all_emails)

@@ -13,18 +13,20 @@ class Games(Base):
     player2 = Column(String(50), ForeignKey('users.email'))
     winner = Column(String(50))
     done = Column(Boolean)
+    chat_count = Column(Integer)
     #user_email = Column(String(50), ForeignKey('users.email'))
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
     # user = relationship('User', back_populates='notes')
     user_player1 = relationship('User', back_populates='games_as_player1', foreign_keys=[player1])
     user_player2 = relationship('User', back_populates='games_as_player2', foreign_keys=[player2])
-    def __init__(self, name, description, player1, player2, winner='', done=False):
+    def __init__(self, name, description, player1, player2, winner='', done=False, chat_count=0):
         self.name = name
         self.description = description
         self.player1 = player1
         self.player2 = player2
         self.winner = winner
         self.done = done
+        self.chat_count = chat_count
 
 Base.metadata.create_all(engine)
