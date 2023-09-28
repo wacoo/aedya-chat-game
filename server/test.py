@@ -3,16 +3,13 @@ from models.users import User
 from models.chats import Chats
 from models.games import Games
 
-# create a new user
+Base.metadata.create_all(bind=engine)
+
+# Create a new user
+# user = User(fname='John', lname='Doe', email='johndoe@example.com', password='123', country='X', total_score=0)
+# session.add(user)
+# session.commit()
 '''
-
-'''
-
-#Working....
-'''user = User(email='johndoe@example.com', fname='John', lname='Doe', country='Ethiopia', score=0, password='123')
-session.add(user)
-#session.commit()
-
 user2 = User(email='wabaham9@gmail.com', fname='Wondmagegn', lname='Chosha', country='Kenya', score=0, password='123')
 session.add(user2)
 #session.commit()
@@ -26,12 +23,12 @@ session.add(user4)'''
 
 
 #Chat
-chat1 = Chats(chat='Hi albert, how is the day going? I am having some problem with the project. Can you help?', sent_from='wabaham9@gmail.com', sent_to='albert@gmail.com')
+'''chat1 = Chats(chat='Hi albert, how is the day going? I am having some problem with the project. Can you help?', sent_from='wabaham9@gmail.com', sent_to='albert@gmail.com')
 session.add(chat1)
 session.commit()
 chat2 = Chats(chat='Sorry man, I am in bit fo trouble. I can not.', sent_from='albert@gmail.com', sent_to='wabaham9@gmail.com')
 session.add(chat2)
-session.commit()
+session.commit()'''
 '''
 u1 = session.query(User).filter_by(email='wabaham9@gmail.com').all()
 u2 = session.query(User).filter_by(email='aboanarges@gmail.com').all()'''

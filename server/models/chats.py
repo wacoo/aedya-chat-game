@@ -1,13 +1,11 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
-from models.base import Base
+from .base import Base, engine
 import datetime
-
 
 class Chats(Base):
     __tablename__ = 'chats'
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    id = Column(Integer, primary_key=True)
     chat = Column(String(1000))
     sent_from = Column(String(50), ForeignKey('users.email'))
     sent_to = Column(String(50), ForeignKey('users.email'))
@@ -21,3 +19,5 @@ class Chats(Base):
         self.chat = chat
         self.sent_from = sent_from
         self.sent_to = sent_to
+
+Base.metadata.create_all(bind=engine)
