@@ -59,14 +59,13 @@ const Register = () => {
     const [lname, setLname] = useState('');
     const [email, setEmail] = useState('');
     const [country, setCountry] = useState('');
-    const [score, setScore] = useState('');
     const [password, setPassword] = useState('');
     const [msgClass, setMsgClass] = useState('neutral');
 
     const handleSubmit = (e) => {
         e.preventDefault();
         const userData = {
-            fname, lname, email, country, score, password,
+            fname, lname, email, country, password,
         }
         dispatch(registerUser(userData));    
     }
@@ -112,9 +111,6 @@ const Register = () => {
                                 <option value={country}>{country}</option>
                             ))}
                         </select>
-                        <br />
-                        <br />
-                        <input type="number" id="score" onChange={(e) => setScore(e.target.value)} name="score" placeholder="Score"/>
                         <br />
                         <br />
                         <input type="password" name="passwd" onChange={(e) => setPassword(e.target.value)} id="passwd" />

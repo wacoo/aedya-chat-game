@@ -10,10 +10,10 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const localToken = localStorage.getItem('token');
+    const localToken = JSON.parse(localStorage.getItem('token'));
 
     useEffect(() => {
-        if(localToken) {
+        if(localToken?.token) {
             console.log(localToken)
             navigate('/');
         }

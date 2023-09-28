@@ -7,23 +7,25 @@ const initialState = {
     error: undefined,
 }
 
-const fetchChats = createAsyncThunk('chat/fetchChats', async(credential) => {
+const fetchChats = createAsyncThunk('chat/fetchChats', async (credential) => {
     const url = 'http://localhost:5000/view/';
-
-    const res = await axios.get(url, credential, {
-        headers: { 'Content-Type': 'application/json' },
-      });
-
-    return await res.data;
-});
+  
+    console.log(credential);
+    const res = await axios.get(url, {
+      headers: { 'Content-Type': 'application/json' },
+      params: credential,
+    });
+  
+    return res.data;
+  });
 
 const sendChat = createAsyncThunk('chat/sendChat', async(msgObj) => {
     const url = 'http://localhost:5000/view/send';
 
-    const res = null;
+    // const res = null;
     // if (token && token.email === credential.email) {
         console.log(msgObj);
-        res = await axios.post(url, msgObj, 
+        const res = await axios.post(url, msgObj, 
             // {
             //     headers: { 'Content-Type': 'application/json',  Authorization: `Bearer ${token.token}`,},
             // }
@@ -32,7 +34,6 @@ const sendChat = createAsyncThunk('chat/sendChat', async(msgObj) => {
 
     return await res.data;
 })
-
 
 const chatSlice = createSlice({
     name: 'chat',

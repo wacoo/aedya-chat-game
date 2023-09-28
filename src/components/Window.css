@@ -4,6 +4,9 @@
 }
 
 .container {
+    /* background-image: url('../img/bg1.jpg');
+    background-size: cover;
+    background-repeat: no-repeat; */
     background-color: lightgreen;
     width: 100%;
     min-height: 100vh;

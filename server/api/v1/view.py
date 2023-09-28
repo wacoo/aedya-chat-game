@@ -95,7 +95,6 @@ def new_game():
 def getGame():
    ''' get game '''
    email = request.args.get("email")
-   print('DDDD', email)
    #games = session.query(Games).all()
    game1 = session.query(Games).filter(or_(Games.player1 == email, Games.player2 == email), Games.done == False).first()
    opponent = ''
@@ -108,3 +107,17 @@ def getGame():
       return {'message': 'Game found', 'game_id': game1.id, 'opponent': opponent} #jsonify({'id':game1.id, 'player1': game1.player1, 'player2': game1.player2})
    else:
       return jsonify({'error': 'No game in progress'})
+
+@view.route('/updatecount', methods=['PUT'])
+#@auth.requires_token
+def update_count():
+   ''' update chat count '''
+   try:
+      game_id = request.json.get('game_id')
+      game = session.query(Games).filter(Games.id == game_id).first()
+      game.chat_count += 1
+      session.commit()
+      return jsonify({'message': 'Update successful!', 'count': game.chat_count})
+   except Exception as e:
+      session.rollback()
+      return jsonify({'error': 'Update not successful: ' + e})
