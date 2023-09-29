@@ -6,6 +6,7 @@ from models.oppnent import Opponent
 from models.games import Games
 from auth.auth import TokenAuth
 from sqlalchemy import or_, and_
+from sqlalchemy.exc import SQLAlchemyError
 import random
 
 view = Blueprint('view', __name__)
@@ -128,88 +129,116 @@ def update_count():
       return jsonify({'error': 'Update not successful: ' + e})
 
 @view.route('/addeval', methods=['PUT'])
-#@auth.requires_token
 def add_evaluation():
-   ''' add evaluation '''
-   game_id = request.json.get('game_id')
-   user_email = request.json.get('email')
-   review_value = request.json.get('value')
+    ''' add evaluation '''
+    game_id = request.json.get('game_id')
+    user_email = request.json.get('email')
+    review_value = request.json.get('value')
 
-   try:
-      game = session.query(Games).filter(Games.id == game_id).first()
-      if user_email == game.player1:
-         game.player1_review = review_value
-      elif user_email == game.player2:
-         game.player2_review = review_value
-      session.commit()
-      session.close()
-      return jsonify({'message': 'Update successful!'})
-   except Exception as e:
-      session.rollback()
-      return jsonify({'error': 'Update not successful: ' + str(e)})
+    try:
+        game = session.query(Games).filter(Games.id == game_id).first()
+        if user_email == game.player1:
+            game.player1_review = review_value
+        elif user_email == game.player2:
+            game.player2_review = review_value
+
+        session.close()
+
+        return jsonify({'message': 'Update successful!'})
+    except SQLAlchemyError as e:
+        session.rollback()
+        session.close()
+        return jsonify({'error': 'Update not successful: ' + str(e)})
 
 
 @view.route('/addscore', methods=['PUT'])
-#@auth.requires_token
 def add_score():
-   ''' add score '''
-   try:
-      game_id = request.json.get('game_id')
-      game = session.query(Games).filter(Games.id == game_id).first()
-      player1_review = game.player1_review
-      player2_review = game.player2_review
+    ''' add score '''
+    try:
+        game_id = request.json.get('game_id')
+        game = session.query(Games).filter(Games.id == game_id).first()
+        player1_review_value = game.player1_review
+        player2_review_value = game.player2_review
 
-      if player1_review < 0 or player2_review < 0:
-         return jsonify({'error': 'Review not complete!', 'success': False})
+        if player1_review_value < 0 or player2_review_value < 0:
+            return jsonify({'error': 'Review not complete!', 'success': False})
 
-      player1_review = max(player1_review, 0)
-      player2_review = max(player2_review, 0)
+        player1_review_value = max(player1_review_value, 0)
+        player2_review_value = max(player2_review_value, 0)
 
-      if player1_review == player2_review:
-         player1_score = 1
-         player2_score = 1
-      else:
-         if player1_review == 1:
-               player1_score = 0
-               player2_score = 3
-         else:
-               player1_score = 3
-               player2_score = 0
+        player1_email, player2_email = game.player1, game.player2
+        player1, player2 = session.query(User).filter(User.email.in_([player1_email, player2_email])).all()
 
-      player1 = session.query(User).filter(User.email == game.player1).first()
-      player1.total_score += player1_score
+        player1_score = player2_score = 1
+        if player1_review_value != player2_review_value:
+            player1_score = 3 if player1_review_value == 0 else 0
+            player2_score = 3 if player1_score == 0 else 0
 
-      player2 = session.query(User).filter(User.email == game.player2).first()
-      player2.total_score += player2_score
+        player1.total_score += player1_score
+        player2.total_score += player2_score
 
-      session.commit()
-      return ({'message': 'Score added successfully!', 'scores': {player1.email: player1.total_score, player2.email: player2.total_score}, 'success': True  })
-   except Exception as e:
-      session.rollback()
-      return jsonify({'error': 'Score not added! ' + str(e)})
-   
+        player1_country = player1.country
+        all_emails = session.query(User.email).filter(User.country == player1_country, User.email.notin_([player1_email, player2_email])).all()
+        all_emails = [email[0] for email in all_emails]
+
+        game_to_update = session.query(Games).filter(Games.done.is_(False), Games.player1 == player1_email).first()
+        if game_to_update:
+            max_score_user = session.query(User.email, User.total_score).filter(User.country == player1_country).order_by(User.total_score.desc()).first()
+            if max_score_user:
+                game_to_update.done = True
+                game_to_update.winner = max_score_user[0]
+            else:
+                return jsonify({'error': 'No user with the highest score found.'})
+        else:
+            return jsonify({'error': 'No game found where done is False.'})
+
+        game1 = Games(name='AEDYA', description='At the end of the day you are alone.', player1=player1_email, player2=player2_email, winner='', done=False)
+        session.add(game1)
+
+        played_opponents = session.query(Opponent.opponent_email).filter(Opponent.player_email.in_([player1_email, player2_email])).distinct().all()
+        played_opponents = [opponent[0] for opponent in played_opponents]
+        valid_opponents = [email for email in all_emails if email not in played_opponents]
+
+        session.close()
+
+        return jsonify({
+            'message': 'Score added successfully!',
+            'scores': {player1.email: player1.total_score, player2.email: player2.total_score},
+            'valid_opponents': valid_opponents,
+            'success': True
+        })
+    except SQLAlchemyError as e:
+        session.rollback()
+        session.close()
+        return jsonify({'error': 'Score not added: ' + str(e)})
+
 @view.route('/getuser', methods=['GET'])
-#@auth.requires_token
 def get_user():
-   ''' get user '''
-   try:
-      email = request.args.get('email')
-      user = session.query(User).filter(User.email == email).first()
+    ''' get user '''
+    try:
+        email = request.args.get('email')
+        user = session.query(User).filter(User.email == email).first()
 
-      if user:
-         user_data = {
-            'email': user.email,
-            'fname': user.fname,
-            'lname': user.lname,
-            'country': user.country,
-            'total_score': user.total_score,
-         }
-      session.commit()
-      return jsonify(user_data)
-   except Exception as e:
-      session.rollback()
-      return jsonify({'error': 'Can\'t load data for ' + email})
-   
+        if user:
+            user_data = {
+                'email': user.email,
+                'fname': user.fname,
+                'lname': user.lname,
+                'country': user.country,
+                'total_score': user.total_score,
+            }
+            session.commit()
+            session.close()
+            return jsonify(user_data)
+        else:
+            session.commit()
+            session.close()
+            return jsonify({'error': 'User not found'})
+    except Exception as e:
+        session.rollback()
+        session.close()
+        return jsonify({'error': 'Error occurred', 'message': str(e)})
+
 
 def get_available_users(session, player1_email, country):
     '''retrieve available users from the same country as player1.'''
@@ -233,14 +262,7 @@ def update_previous_game(session, player1_email, all_users):
         print("No game found where done is False.")
 
 def create_new_game(session, player1_email, player2_email):
-    game1 = Games(name='AEDYA', description='At the end of the day you are alone.',
-                  player1=player1_email, player2=player2_email, winner='', done=False)
-    session.add(game1)
-    session.commit()
-    return game1.id
-
-def create_new_game(session, player1_email, player2_email):
-    """Create a new game with player1 and player2."""
+    ''' create a new game with player1 and player2. '''
     game1 = Games(name='AEDYA', description='At the end of the day you are alone.',
                   player1=player1_email, player2=player2_email, winner='', done=False)
     session.add(game1)
