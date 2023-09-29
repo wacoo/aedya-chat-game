@@ -9,19 +9,12 @@ const initialState = {
     error: undefined,
 }
 
+const token = JSON.parse(localStorage.getItem('token'));
+
 const authenticateUser = createAsyncThunk('user/authenticateUser', async(credential) => {
     const url = 'http://localhost:5000/auth/login';
 
-    // console.log(credential);
     let res = null;
-    // const token = localStorage.getItem('token');
-    // if (token && token.email === credential.email) {
-    //     res = await axios.post(url, {
-    //         headers: {
-    //             Authorization: `Bearer ${token.token}`,
-    //         },
-    //     });
-    // } else {
     res = await axios.post(url, credential, {
         headers: { 'Content-Type': 'application/json' },
     });
@@ -46,7 +39,10 @@ const fetchUser = createAsyncThunk('games/fetchUser', async(data) => {
     const url = 'http://localhost:5000/view/getuser';
     console.log(data);
     const res = await axios.get(url, {
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token.token}`
+        },
         params: data,
       });
 

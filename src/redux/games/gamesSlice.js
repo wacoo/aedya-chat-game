@@ -10,11 +10,16 @@ const initialState = {
     error: undefined,
 }
 
+const token = JSON.parse(localStorage.getItem('token'));
+
 const newGame = createAsyncThunk('games/newGame', async(data) => {
     const url = 'http://localhost:5000/view/newgame';
     // console.log(data);
     const res = await axios.post(url, data, {
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token.token}`
+        },
       });
 
     return await res.data;
@@ -24,7 +29,10 @@ const fetchGame = createAsyncThunk('games/getgame', async(data) => {
     const url = 'http://localhost:5000/view/getgame';
     console.log(data);
     const res = await axios.get(url, {
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token.token}`
+        },
         params: data,
       });
 
@@ -34,7 +42,10 @@ const fetchGame = createAsyncThunk('games/getgame', async(data) => {
 const updateChatCount = createAsyncThunk('games/updateChatCount', async(data) => {
     const url = 'http://localhost:5000/view/updatecount';
     const res = await axios.put(url, data, {
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token.token}`
+        },
       });
 
     return await res.data;
@@ -44,7 +55,10 @@ const updateEvaluation = createAsyncThunk('games/updateEvaluation', async(data) 
     const url = 'http://localhost:5000/view/addeval';
     console.log(data);
     const res = await axios.put(url, data, {
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token.token}`
+        },
       });
 
     return await res.data;
@@ -54,7 +68,10 @@ const updateScore = createAsyncThunk('games/updateSchore', async(data) => {
     const url = 'http://localhost:5000/view/addscore';
     console.log(data);
     const res = await axios.put(url, data, {
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token.token}`
+        },
       });
 
     return await res.data;

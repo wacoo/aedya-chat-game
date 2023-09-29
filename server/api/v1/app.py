@@ -5,7 +5,7 @@ from api.v1.auth_view import auth_view
 
 app = Flask(__name__)
 CORS(app)
-CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:5500"}})
+#CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:5500"}})
 
 app.config["SECRET_KEY"] = '12345'
 

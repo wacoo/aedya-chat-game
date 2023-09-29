@@ -6,31 +6,33 @@ const initialState = {
     chatList: {},
     error: undefined,
 }
+const token = JSON.parse(localStorage.getItem('token'));
 
 const fetchChats = createAsyncThunk('chat/fetchChats', async (credential) => {
     const url = 'http://localhost:5000/view/';
   
     console.log(credential);
     const res = await axios.get(url, {
-      headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token.token}`
+        },
       params: credential,
     });
   
     return res.data;
   });
 
-const sendChat = createAsyncThunk('chat/sendChat', async(msgObj) => {
+const sendChat = createAsyncThunk('chat/sendChat', async (msgObj) => {
     const url = 'http://localhost:5000/view/send';
-
-    // const res = null;
-    // if (token && token.email === credential.email) {
-        console.log(msgObj);
-        const res = await axios.post(url, msgObj, 
-            // {
-            //     headers: { 'Content-Type': 'application/json',  Authorization: `Bearer ${token.token}`,},
-            // }
-      );
-    // }
+    console.log(msgObj);
+    const res = await axios.post(url, msgObj, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token.token}`
+        },
+    }
+    );
 
     return await res.data;
 })

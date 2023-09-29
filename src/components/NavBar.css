@@ -11,6 +11,15 @@
     font-weight: 600;
 }
 
+.header img {
+    width: 40px;
+    background-color: #fcc00d;
+    border-radius: 50%;
+    margin: 5px;
+    margin-left: 24px;
+    border: #fff solid 2px;
+}
+
 .menu {
     margin-right: 24px;
 } 

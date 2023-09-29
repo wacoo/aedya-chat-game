@@ -52,10 +52,10 @@ const ChatBox = () => {
     }, [chatCount]);
 
     useEffect(() => {
-        if (game?.opponent) {
+        //if (game?.opponent) {
             console.log(token.email, game.opponent);
             dispatch(fetchChats({ email1: token.email, email2: game.opponent }));
-        }
+        //}
         console.log(game);
     }, [game]);
 
@@ -80,17 +80,26 @@ const ChatBox = () => {
         }
     }
 
-    const handleThumbsup = (e) => {
+    const handleThumbsup = async (e) => {
         e.preventDefault();
-        dispatch(updateEvaluation({'game_id': game.game_id, 'email': token.email, 'value': 1}));
-        dispatch(updateScore({game_id: game.game_id}));
+        await dispatch(updateEvaluation({ game_id: game?.game_id, email: token.email, value: 1 }));
+        dispatch(updateScore({ game_id: game?.game_id }));
+        dispatch(fetchUser({email: token.email}));
         setCls('hide');
-    }
+    };
+    
+    const handleThumbsdown = async (e) => {
+        e.preventDefault();
+        await dispatch(updateEvaluation({ game_id: game?.game_id, email: token.email, value: 0 }));
+        dispatch(updateScore({ game_id: game?.game_id }));
+        dispatch(fetchUser({email: token.email}))
+        setCls('hide');
+    };
 
-    const handleThumbsdown = (e) => {
-        e.preventDefault();
-        dispatch(updateEvaluation({'game_id': game.game_id, 'email': token.email, 'value': 0}));
-        setCls('hide');
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            handleClick();
+        }
     }
 
     return (
@@ -116,7 +125,7 @@ const ChatBox = () => {
                     <h2>{token?.email ? token.email.split('@')[0].toUpperCase() : 'PLAYER 1'} VS {game?.opponent ? game.opponent.split('@')[0].toUpperCase() : 'PLAYER 2'}</h2>
                     <h2>SCORE: {user.total_score}</h2>
                     <div className={gameStatusClass}>
-                        <input type="text" placeholder="Say hi ..." value={message.msg} onChange={(e) => {handleChange(e)}}/>
+                        <input type="text" placeholder="Say hi ..." value={message.msg} onKeyUp={(e) => handleKeyPress(e)} onChange={(e) => {handleChange(e)}}/>
                         <button type="button" onClick={() => handleClick()}>Send</button>
                     </div> 
             </div>
