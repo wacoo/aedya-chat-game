@@ -4,6 +4,7 @@ from models.base import Base, engine
 import datetime
 
 class User(Base):
+    ''' user class '''
     __tablename__ = 'users'
     email = Column(String(50), primary_key=True)
     fname = Column(String(50))

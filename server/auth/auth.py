@@ -17,6 +17,7 @@ class TokenAuth:
         self.secret_key = app.config["SECRET_KEY"]
 
     def generate_token(self, email):
+        ''' generates token '''
         token = str(uuid.uuid4())
         redis_client.set(token, email)
         print('email', redis_client.get(token))
@@ -33,6 +34,7 @@ class TokenAuth:
             return None
 
     def requires_token(self, f):
+        ''' requires token '''
         @functools.wraps(f)
         def decorated(*args, **kwargs):
             token = request.headers.get("Authorization")
