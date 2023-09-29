@@ -2,6 +2,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import './NavBar.css';
 import { useDispatch } from 'react-redux';
 import { newGame } from '../redux/games/gamesSlice';
+import Logo from '../img/logo.png';
 
 const NavBar = (props) => {
     const { cls } = props;
@@ -25,7 +26,7 @@ const NavBar = (props) => {
     return (
         <header className="header">
             <div className="logo">
-                <img src="" alt="" />
+                <img src={Logo} alt="Logo" />
             </div>
             <div className="menu">
                 <ul>
