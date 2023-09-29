@@ -24,3 +24,11 @@
     color: #fff;
     text-decoration: none;
 }
+
+.hidden {
+    display: none;
+}
+
+.show {
+    display: inline;
+}

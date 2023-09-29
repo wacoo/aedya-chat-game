@@ -8,6 +8,7 @@ const Login = () => {
     const token = useSelector((state) => state.user.token);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [newGClass, setNewGClass] = ['hidden'];
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const localToken = JSON.parse(localStorage.getItem('token'));
@@ -27,7 +28,7 @@ const Login = () => {
 
     return (
         <>
-            <NavBar />
+            <NavBar cls = "hidden" />
             <div className="container">
                 <div className="reg-wrapper">
                     <form action="" method="post" onSubmit={(e) => {handleSubmit(e)}}>

@@ -4,7 +4,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-bottom: 250px;
+    margin-top: 50px;
+    margin-bottom: 200px;
     /* outline: red solid 2px; */
 }
 
@@ -26,9 +27,16 @@
 }
 
 .input-wrapper h2 {
+    width: 100%;
+    text-align: center;
     color: #fff;
-    font-family: Arial, Helvetica, sans-serif;
-    margin: 12px 0;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-weight: 700;
+    margin: 12px;
+    padding: 5px;
+    background-color: rgb(45, 116, 51);
+    border: #fff solid 2px;
+    display: inline;
 }
 
 .input-box {
@@ -115,6 +123,14 @@
     color: red;
 }
 
+.modal-wrapper h2 {
+ padding: 12px;
+}
+
+.modal-wrapper .promote {
+    padding: 12px;
+}
+
 .disabled-button {
     opacity: 0.5;
     pointer-events: none;
@@ -156,10 +172,6 @@
         align-items: center;
         height: 100px;
         margin: 5px;
-    }
-    .box {
-        margin-bottom: 150px;
-        /* outline: red solid 2px; */
     }
 
 }

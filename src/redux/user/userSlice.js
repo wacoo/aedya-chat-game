@@ -5,6 +5,7 @@ const initialState = {
     isLoading: false,
     message: {},
     token: null,
+    userData: {},
     error: undefined,
 }
 
@@ -41,6 +42,17 @@ const registerUser = createAsyncThunk('user/registerUser', async(userData) => {
     return await res.data;
 })
 
+const fetchUser = createAsyncThunk('games/fetchUser', async(data) => {
+    const url = 'http://localhost:5000/view/getuser';
+    console.log(data);
+    const res = await axios.get(url, {
+        headers: { 'Content-Type': 'application/json' },
+        params: data,
+      });
+
+    return await res.data;
+});
+
 const userSlice = createSlice({
     name: 'user',
     initialState,
@@ -74,8 +86,20 @@ const userSlice = createSlice({
             state.isLoading = false;
             state.error = action.error.message;
         })
+        .addCase(fetchUser.pending, (state) => {
+            state.isLoading = true;
+        })
+        .addCase(fetchUser.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.error = undefined;
+            state.userData = action.payload;
+        })
+        .addCase(fetchUser.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.error.message;
+        })
     }
 })
 
-export {authenticateUser, registerUser};
+export {authenticateUser, registerUser, fetchUser};
 export default userSlice.reducer;

@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 const Window = () => {
     return (
         <>
-            <NavBar />
+            <NavBar cls="show"/>
             <div className="container">
                 {/* <SideBar /> */}
                 <div className="chatbox-wrapper">

@@ -3,11 +3,11 @@ import './NavBar.css';
 import { useDispatch } from 'react-redux';
 import { newGame } from '../redux/games/gamesSlice';
 
-const NavBar = () => {
+const NavBar = (props) => {
+    const { cls } = props;
     const dispatch = useDispatch();
     const token = JSON.parse(localStorage.getItem('token'));
     const navigate = useNavigate();
-    // console.log(token);
     const handleLogout = (e) => {
         e.preventDefault();
         localStorage.removeItem('token');
@@ -19,6 +19,7 @@ const NavBar = () => {
         console.log(token);
         dispatch(newGame({'player1': token.email, 'country': token.country}));
         console.log('new game2');
+        localStorage.removeItem('gameStatusClass')
     }
 
     return (
@@ -29,7 +30,7 @@ const NavBar = () => {
             <div className="menu">
                 <ul>
                     <li><NavLink exact="true" to="/">Home</NavLink> </li>
-                    <li><NavLink  to="" onClick={(e) => handleNewGame(e)}>New Game</NavLink></li>
+                    <li><NavLink  className={cls} to="" onClick={(e) => handleNewGame(e)}>New Game</NavLink></li>
                     <li><NavLink to="/register">Register</NavLink></li>
                     {
                         token ? <li><NavLink  to="/logout" onClick={(e) => handleLogout(e)}>Logout</NavLink> </li>: <li><NavLink  to="/login">Login</NavLink></li>
