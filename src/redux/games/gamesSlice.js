@@ -5,6 +5,8 @@ const initialState = {
     isLoading: false,
     data: {},
     chatCount: {},
+    evalResult: {},
+    updateScoreResult: {},
     error: undefined,
 }
 
@@ -28,8 +30,18 @@ const fetchGame = createAsyncThunk('games/getgame', async(data) => {
 
     return await res.data;
 });
+
 const updateChatCount = createAsyncThunk('games/updateChatCount', async(data) => {
     const url = 'http://localhost:5000/view/updatecount';
+    const res = await axios.put(url, data, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+    return await res.data;
+});
+
+const updateEvaluation = createAsyncThunk('games/updateEvaluation', async(data) => {
+    const url = 'http://localhost:5000/view/addeval';
     console.log(data);
     const res = await axios.put(url, data, {
         headers: { 'Content-Type': 'application/json' },
@@ -37,6 +49,17 @@ const updateChatCount = createAsyncThunk('games/updateChatCount', async(data) =>
 
     return await res.data;
 });
+
+const updateScore = createAsyncThunk('games/updateSchore', async(data) => {
+    const url = 'http://localhost:5000/view/addscore';
+    console.log(data);
+    const res = await axios.put(url, data, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+    return await res.data;
+});
+
 const gamesSlice = createSlice({
     name: 'games',
     initialState,
@@ -72,8 +95,28 @@ const gamesSlice = createSlice({
             state.isLoading = false;
             state.error = action.error.message;
         })
+        .addCase(updateEvaluation.pending, (state) => {
+            state.isLoading = true;
+        })
+        .addCase(updateEvaluation.fulfilled, (state, action) => {
+            state.evalResult = action.payload;
+        })
+        .addCase(updateEvaluation.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.error.message;
+        })
+        .addCase(updateScore.pending, (state) => {
+            state.isLoading = true;
+        })
+        .addCase(updateScore.fulfilled, (state, action) => {
+            state.updateScoreResult = action.payload;
+        })
+        .addCase(updateScore.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.error.message;
+        })
     }
 })
 
-export {newGame, fetchGame, updateChatCount};
+export {newGame, fetchGame, updateChatCount, updateEvaluation, updateScore};
 export default gamesSlice.reducer;

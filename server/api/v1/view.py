@@ -18,10 +18,8 @@ def home():
    try:
       email1 = request.args.get("email1")
       email2 = request.args.get("email2")
-      #games = session.query(Games).all()
       chats = session.query(Chats).filter(or_(and_(Chats.sent_from == email1, Chats.sent_to == email2), and_(Chats.sent_from == email2, Chats.sent_to == email1))).all()
-      #user_data['chatentials'] = chats
-      #user_data['games'] = games
+
       chat_lst = []
       for chat in chats:
          chat_dict = {}
@@ -178,7 +176,6 @@ def add_score():
                player1_score = 3
                player2_score = 0
 
-      # session.commit()
       player1 = session.query(User).filter(User.email == game.player1).first()
       player1.total_score += player1_score
 
@@ -206,7 +203,6 @@ def get_user():
             'lname': user.lname,
             'country': user.country,
             'total_score': user.total_score,
-            # ...include other attributes as needed
          }
       session.commit()
       return jsonify(user_data)

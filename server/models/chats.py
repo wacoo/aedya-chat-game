@@ -4,6 +4,7 @@ from .base import Base, engine
 import datetime
 
 class Chats(Base):
+    ''' chats class '''
     __tablename__ = 'chats'
     id = Column(Integer, primary_key=True)
     chat = Column(String(1000))
