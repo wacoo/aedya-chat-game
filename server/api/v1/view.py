@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request, current_app
 from models.base import session
 from models.users import User
 from models.chats import Chats
+from models.oppnent import Opponent
 from models.games import Games
 from auth.auth import TokenAuth
 from sqlalchemy import or_, and_
@@ -64,30 +65,31 @@ def new_game():
    try:
       player1_email = request.json.get("player1")
       country = request.json.get("country")
-      all_users = session.query(User.email).filter(User.country == country).all()
-      player2_email = random.choice(all_users)[0]
 
-      print('P1', player1_email)
-      all_users = session.query(User.email).filter(User.country == country).all()
-      all_emails = [user[0] for user in all_users if user[0] != player1_email]
-      player2_email = random.choice(all_emails)
-      #Update previous game
-      game_to_update = session.query(Games).filter(Games.done == False, Games.player1 == player1_email).first()
-      if game_to_update:
-         game_to_update.done = True
-         game_to_update.winner = random.choice([player1_email, player2_email])
-         session.commit()
-         print("Game updated successfully.")
+      all_emails, all_users = get_available_users(session, player1_email, country)
+        
+      if len(all_emails) > 0:
+         valid_opponents = get_valid_opponents(session, player1_email, all_emails)
+            
+         if len(valid_opponents) > 0:
+            player2_email = random.choice(valid_opponents)
+                
+            update_previous_game(session, player1_email, all_users)
+                
+            game_id = create_new_game(session, player1_email, player2_email)
+                
+            opponent_entry = Opponent(player_email=player1_email, opponent_email=player2_email)
+            session.add(opponent_entry)
+            session.commit()
+                
+            return jsonify({'message': 'Game created', 'game_id': game_id, 'opponent': player2_email})
+         else:
+            return jsonify({'error': 'No available players. All opponents have been played.'})
       else:
-         print("No game found where done is False.")
+            return jsonify({'error': 'No available players.'})
 
-      game1 = Games(name= 'AEDYA', description='At the end of the day you are alone.', player1=player1_email, player2=player2_email, winner='', done=False)
-      session.add(game1)
-      session.commit()
-
-      return jsonify({'message': 'Game created', 'game_id': game1.id, 'opponent': player2_email})
    except Exception as e:
-      #session.rollback()
+      session.rollback()
       return jsonify({'error': 'Error: Game not created' + str(e)})
 
 @view.route('/getgame', methods=['GET'])
@@ -142,6 +144,7 @@ def add_evaluation():
       elif user_email == game.player2:
          game.player2_review = review_value
       session.commit()
+      session.close()
       return jsonify({'message': 'Update successful!'})
    except Exception as e:
       session.rollback()
@@ -175,7 +178,7 @@ def add_score():
                player1_score = 3
                player2_score = 0
 
-      print(player1.total_score + player1_score)
+      # session.commit()
       player1 = session.query(User).filter(User.email == game.player1).first()
       player1.total_score += player1_score
 
@@ -210,4 +213,48 @@ def get_user():
    except Exception as e:
       session.rollback()
       return jsonify({'error': 'Can\'t load data for ' + email})
+   
+
+def get_available_users(session, player1_email, country):
+    '''retrieve available users from the same country as player1.'''
+    all_users = session.query(User.email, User.total_score).filter(User.country == country).all()
+    all_emails = [user[0] for user in all_users if user[0] != player1_email]
+    return all_emails, all_users
+
+def update_previous_game(session, player1_email, all_users):
+    '''update the winner of the previous game with the user having the highest total score.'''
+    game_to_update = session.query(Games).filter(Games.done == False, Games.player1 == player1_email).first()
+    if game_to_update:
+        max_score_user = max(all_users, key=lambda x: x[1])
+        if max_score_user:
+            game_to_update.done = True
+            game_to_update.winner = max_score_user[0]
+            session.commit()
+            print("Game updated successfully.")
+        else:
+            print("No user with the highest score found.")
+    else:
+        print("No game found where done is False.")
+
+def create_new_game(session, player1_email, player2_email):
+    game1 = Games(name='AEDYA', description='At the end of the day you are alone.',
+                  player1=player1_email, player2=player2_email, winner='', done=False)
+    session.add(game1)
+    session.commit()
+    return game1.id
+
+def create_new_game(session, player1_email, player2_email):
+    """Create a new game with player1 and player2."""
+    game1 = Games(name='AEDYA', description='At the end of the day you are alone.',
+                  player1=player1_email, player2=player2_email, winner='', done=False)
+    session.add(game1)
+    session.commit()
+    return game1.id
+
+def get_valid_opponents(session, player1_email, all_emails):
+    ''' return valid oppnent '''
+    played_opponents = session.query(Opponent.opponent_email).filter(Opponent.player_email == player1_email).all()
+    played_opponents = [opponent[0] for opponent in played_opponents]
+    valid_opponents = [email for email in all_emails if email not in played_opponents]
+    return valid_opponents
 

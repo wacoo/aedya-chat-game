@@ -5,4 +5,4 @@ redis_client = Redis(host='localhost', port=6379, db=0)
 print(redis_client.get('token'))
 
 if __name__ == '__main__':
-    app.run()
+    app.run(threaded=True)

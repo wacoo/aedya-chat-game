@@ -2,6 +2,7 @@ from models.base import session, engine, Base
 from models.users import User
 from models.chats import Chats
 from models.games import Games
+from models.oppnent import Opponent
 
 Base.metadata.create_all(bind=engine)
 
