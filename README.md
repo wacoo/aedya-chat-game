@@ -65,7 +65,7 @@ AEDYA Chat Game is an innovative project aimed at creating an engaging and inter
 ### Tech Stack <a name="tech-stack"></a>
 - HTML/CSS/JS/JSX
 - Stack frontend: React/Redux/React-Redux/Router
-- Stack frontend: Flask/Redis/Mysql
+- Stack backend: Flask/Redis/Mysql
 
 
 <!-- Features -->
