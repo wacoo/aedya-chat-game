@@ -30,7 +30,7 @@ After you're finished please remove all the comments and instructions!
   <img src="./src/images/logo.png" alt="logo" width="140"  height="auto" />
   <br/>
 
-  <h3><b>[Project Title]</b></h3>
+  <h3><b>AEDYA Chat Game</b></h3>
 
 </div>
 
@@ -56,10 +56,9 @@ After you're finished please remove all the comments and instructions!
 
 <!-- PROJECT DESCRIPTION  -->
 
-# 📖 [Project Title] <a name="about-project"></a>
+# 📖 AEDYA Chat Game <a name="about-project"></a>
 
-[Project Description]
-This template is a react project with linters configuration for react and redux. However, it doesn't include redux. It has to be installed manually if needed. 
+AEDYA Chat Game is an innovative project aimed at creating an engaging and interactive chat application. The purpose of this project is to provide users from different countries with an opportunity to register and play exciting chat games. The game encourages players to connect, communicate, and compete for better rewards, while emphasizing the idea that "at the end of the day, you are alone." Let's explore the features and architecture of AEDYA Chat Game.
 
 ## 🛠 Built With <a name="built-with"></a>
 
@@ -71,7 +70,9 @@ This template is a react project with linters configuration for react and redux.
 <!-- Features -->
 
 ### Key Features <a name="key-features"></a>
-[List of key features of the application]
+**Flask API**
+**React/Redux frontend**
+**Chat application plus game**
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <!-- GETTING STARTED -->
@@ -94,9 +95,9 @@ Example command:
 
 ### Setup
 Clone the repository to desired directory on local computer.
-> `git clone https://github.com/wacoo/<project-name>`
+> `git clone https://github.com/wacoo/aedya-chat-game`
 
-> `cd <project-name>`
+> `cd aedya-chat-game`
 
 > `npm install`
 
