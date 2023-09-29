@@ -58,6 +58,7 @@ After you're finished please remove all the comments and instructions!
 
 # 📖 AEDYA Chat Game <a name="about-project"></a>
 
+
 AEDYA Chat Game is an innovative project that aims to revolutionize the way people connect and interact through a captivating chat application. The primary objective of this project is to provide users from different countries with an immersive and engaging platform where they can register and participate in exciting chat games.
 
 The core concept of AEDYA Chat Game revolves around fostering connections and communication. It encourages players to engage with one another, building relationships, and competing for rewards. The game emphasizes the idea that, ultimately, individuals are responsible for their own journey and success.
@@ -67,6 +68,7 @@ One of the key highlights of AEDYA Chat Game is its range of features designed t
 Behind the scenes, AEDYA Chat Game boasts a well-designed architecture that ensures seamless performance and scalability. The application leverages cutting-edge technologies to deliver a smooth and immersive user experience. The development team prioritizes user feedback and continuously updates and improves the platform to meet the evolving needs and expectations of the community.
 
 In summary, AEDYA Chat Game is a groundbreaking project that combines the elements of chat, gaming, and social interaction. By providing users with an engaging platform for communication and competition, it aims to bring people from different backgrounds together. With its innovative features and robust architecture, AEDYA Chat Game offers a unique and captivating experience for users seeking fun, connection, and rewards.
+
 
 ## 🛠 Built With <a name="built-with"></a>
 
