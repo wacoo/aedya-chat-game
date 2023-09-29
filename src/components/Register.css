@@ -1,0 +1,32 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.reg-wrapper button {
+    margin-bottom: 12px;
+}
+
+.success,
+.failure {
+    font-style: italic;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 600;
+    padding: 8px;
+    background-color: #fff;
+    border-radius: 5px;
+    display: block;
+}
+
+.success {
+    color: green;
+}
+
+.failure {
+    color: red;
+}
+
+.neutral {
+    display: none;
+}

@@ -1,0 +1,31 @@
+.incoming,
+.outgoing {
+    width: 60%;
+    margin: 24px;
+    border-radius: 10px;
+    color: #fff;
+    padding: 12px;
+}
+
+.incoming,
+.outgoing {
+    width: 40%;
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.incoming {
+    margin: 24px 0 24px -13%;
+    background-color: #419197;
+    /* outline: green solid 2px; */
+}
+
+.outgoing {
+    margin-left: 13%;    
+    background-color: #12486B;
+    border-radius: 10px;
+    /* outline: red solid 2px; */
+
+}
